@@ -1,0 +1,52 @@
+PODS:
+  - Alamofire (4.7.3)
+  - Kingfisher (4.8.0)
+  - ObjectMapper (3.3.0)
+  - Reusable (4.0.2):
+    - Reusable/Storyboard (= 4.0.2)
+    - Reusable/View (= 4.0.2)
+  - Reusable/Storyboard (4.0.2)
+  - Reusable/View (4.0.2)
+  - RxAlamofire (4.2.0):
+    - RxAlamofire/Core (= 4.2.0)
+  - RxAlamofire/Core (4.2.0):
+    - Alamofire (~> 4.5)
+    - RxSwift (~> 4)
+  - RxCocoa (4.2.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.2.0)
+  - Swinject (2.4.1)
+
+DEPENDENCIES:
+  - Kingfisher
+  - ObjectMapper
+  - Reusable
+  - RxAlamofire
+  - RxCocoa
+  - RxSwift
+  - Swinject
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - Kingfisher
+    - ObjectMapper
+    - Reusable
+    - RxAlamofire
+    - RxCocoa
+    - RxSwift
+    - Swinject
+
+SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  Kingfisher: 976d828df2b24834c6a3f2fc4d82cdbd26552be1
+  ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  Reusable: 584a5629747c52e0f6a77841b400dc2643f6fa0f
+  RxAlamofire: 87a9c588541210cc3e4a1f843ccc3ecf3eb98b31
+  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
+  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
+  Swinject: f7f15a9672e99328c1f07f277091087917215700
+
+PODFILE CHECKSUM: 782d629f583c7ac8a5314991e3ba7b188c3d88f2
+
+COCOAPODS: 1.5.3
