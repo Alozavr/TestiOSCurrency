@@ -63,9 +63,6 @@ class CurrencyViewController: UIViewController, CurrencyViewProtocol {
         
         viewModel.sectionsArray.asObservable()
             .observeOn(MainScheduler.asyncInstance)
-            .filter({ _ in
-                return !self.tableView.isTracking && !self.tableView.isDecelerating
-            })
             .subscribe(
                 onNext: { newValue in
                     guard newValue.count == self.tableView.numberOfSections else {
@@ -79,13 +76,6 @@ class CurrencyViewController: UIViewController, CurrencyViewProtocol {
                             return
                         }
                     }
-                    
-                    let reloadableCells = self.tableView.visibleCells
-                        .compactMap({ $0 as? TwoLabeledCellWithIcon })
-                        .filter({ !$0.textField.isFirstResponder})
-                        .compactMap({ self.tableView.indexPath(for: $0) })
-                    
-                    self.tableView.reloadRows(at: reloadableCells, with: .none)
             })
             .disposed(by: disposeBag)
     }
@@ -133,11 +123,37 @@ extension CurrencyViewController: UITableViewDataSource {
             configurable.configure(with: item, delegate: self)
         }
         cell.selectionStyle = .none
-        return cell
+        
+        guard let customCell = cell as? TwoLabeledCellWithIcon,
+            let model = item as? TwoLabeledCellWithIconListModel else { return cell }
+        
+        viewModel.sectionsArray.asObservable()
+            .map { (sections) -> String? in
+                for section in sections {
+                    if let currentModel = section.items.compactMap({ $0 as? TwoLabeledCellWithIconListModel })
+                        .first(where: { $0.mainTitle == model.mainTitle}) {
+                        return currentModel.value
+                    }
+                }
+                return nil
+        }
+        .filter({ $0 != nil })
+        .bind(to: customCell.textField.rx.text)
+        .disposed(by: customCell.disposeBag)
+        
+        return customCell
     }
 }
 
 extension CurrencyViewController: CellTextFieldDelegate {
+    func didStartEditingCell(_ cell: TwoLabeledCellWithIcon) {
+        let reloadableCells = self.tableView.visibleCells
+            .compactMap({ $0 as? TwoLabeledCellWithIcon })
+            .filter({ !$0.textField.isFirstResponder})
+            .compactMap({ self.tableView.indexPath(for: $0) })
+        
+        self.tableView.reloadRows(at: reloadableCells, with: .none)
+    }
     
     func shouldChangeText(textField: UITextField, in range: NSRange, with string: String) -> Bool {
         let currentText = (textField.text ?? "") as NSString

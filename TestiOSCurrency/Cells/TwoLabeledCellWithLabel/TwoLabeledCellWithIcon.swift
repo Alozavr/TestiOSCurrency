@@ -13,6 +13,7 @@ import Kingfisher
 
 protocol CellTextFieldDelegate: ListObjectDelegatable {
     func shouldChangeText(textField: UITextField, in range: NSRange, with string: String) -> Bool
+    func didStartEditingCell(_ cell: TwoLabeledCellWithIcon)
 }
 
 class TwoLabeledCellWithIcon: UITableViewCell, ListObject, NibReusable {
@@ -22,6 +23,17 @@ class TwoLabeledCellWithIcon: UITableViewCell, ListObject, NibReusable {
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var bottomLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
+    
+    var disposeBag = DisposeBag()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        resetBag()
+    }
+    
+    func resetBag() {
+        disposeBag = DisposeBag()
+    }
     
     func configure(with viewModel: ListObjectModel, delegate: ListObjectDelegatable?) {
         guard let model = viewModel as? TwoLabeledCellWithIconListModel else { return }
@@ -37,6 +49,15 @@ class TwoLabeledCellWithIcon: UITableViewCell, ListObject, NibReusable {
 }
 
 extension TwoLabeledCellWithIcon: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        resetBag()
+        delegate?.didStartEditingCell(self)
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         return delegate?.shouldChangeText(textField: textField, in: range, with: string) ?? true
     }
